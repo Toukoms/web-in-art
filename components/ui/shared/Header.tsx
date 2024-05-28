@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "../button";
+import NavItems from "./NavItems";
+import MobileNavItems from "./MobileNavItems";
 
 const Header = () => {
   return (
@@ -15,9 +17,17 @@ const Header = () => {
             alt="WebInArt logo"
           />
         </Link>
+
+        <SignedIn>
+          <nav className="md:flex hidden max-w-xs w-full">
+            <NavItems />
+          </nav>
+        </SignedIn>
+
         <div className="flex w-32 justify-end gap-3">
           <SignedIn>
             <UserButton />
+            <MobileNavItems />
           </SignedIn>
           <SignedOut>
             <Button asChild className="rounded-full">
