@@ -83,15 +83,14 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.updated") {
-    const { id, image_url, first_name, last_name, username } =
-      evt.data;
+    const { id, image_url, first_name, last_name, username } = evt.data;
 
-      const user:UpdateUserParams = {
-        firstName: first_name!,
-        lastName: last_name!,
-        username: username!,
-        photo: image_url,
-      };
+    const user: UpdateUserParams = {
+      firstName: first_name!,
+      lastName: last_name!,
+      username: username!,
+      photo: image_url,
+    };
 
     const updatedUser = await updateUser(id, user);
 
@@ -100,11 +99,10 @@ export async function POST(req: Request) {
 
   if (eventType === "user.deleted") {
     const { id } = evt.data;
-    
 
     const deletedUser = await deleteUser(id!);
-    
-    return NextResponse.json({ message: "OK", user: deletedUser});
+
+    return NextResponse.json({ message: "OK", user: deletedUser });
   }
 
   return new Response("", { status: 200 });
