@@ -1,5 +1,5 @@
-import Footer from "@/components/ui/shared/Footer";
-import Header from "@/components/ui/shared/Header";
+import Footer from "@/components/shared/Footer";
+import Header from "@/components/shared/Header";
 
 export default function RootLayout({ children}: Readonly<{
   children: React.ReactNode;
@@ -7,7 +7,7 @@ export default function RootLayout({ children}: Readonly<{
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Header />
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );
