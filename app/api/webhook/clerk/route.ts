@@ -51,9 +51,6 @@ export async function POST(req: Request) {
     });
   }
 
-  // Do something with the payload
-  // For this guide, you simply log the payload to the console
-  const { id } = evt.data;
   const eventType = evt.type;
 
   if (eventType === "user.created") {
@@ -72,7 +69,7 @@ export async function POST(req: Request) {
     const newUser = await createUser(user);
 
     if (newUser) {
-      await clerkClient.users.updateUserMetadata(id, {
+      await clerkClient.users.updateUser(id, {
         publicMetadata: {
           userId: newUser.id,
         },
