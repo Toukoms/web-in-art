@@ -1,48 +1,38 @@
-import Stripe from "stripe";
+import stripe from "stripe";
 import { NextResponse } from "next/server";
 import { createOrder } from "@/lib/actions/order.actions";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+export async function POST(request: Request) {
+  const body = await request.text();
 
-export async function POST(req: Request) {
-  const sig = req.headers.get("stripe-signature") as string;
-  const body = await req.text();
+  const sig = request.headers.get("stripe-signature") as string;
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (err) {
-    const errorMessage = (err as Error).message;
-    NextResponse.json(
-      { message: `Webhook Error: ${errorMessage}` },
-      { status: 400 }
-    );
-    return;
+    return NextResponse.json({ message: "Webhook error", error: err });
   }
 
-  // Handle the event
-  switch (event.type) {
-    case "checkout.session.completed":
-      const { id, amount_total, metadata } = event.data.object;
-      const order = {
-        stripeId: id,
-        eventId: metadata?.eventId || "",
-        buyerId: metadata?.buyerId || "",
-        totalAmount: amount_total ? amount_total.toFixed(0) : "0",
-        createdAt: new Date(),
-      };
+  // Get the ID and type
+  const eventType = event.type;
 
-      const newOrder = await createOrder(order);
-      return NextResponse.json(
-        { message: "Ok", order: newOrder },
-        { status: 200 }
-      );
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
+  // CREATE
+  if (eventType === "checkout.session.completed") {
+    const { id, amount_total, metadata } = event.data.object;
+
+    const order = {
+      stripeId: id,
+      eventId: metadata?.eventId || "",
+      buyerId: metadata?.buyerId || "",
+      totalAmount: amount_total ? (amount_total / 100).toString() : "0",
+      createdAt: new Date(),
+    };
+
+    const newOrder = await createOrder(order);
+    return NextResponse.json({ message: "OK", order: newOrder });
   }
 
   return new Response("", { status: 200 });
