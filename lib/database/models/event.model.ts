@@ -9,10 +9,10 @@ export interface IEvent extends Document {
   createdAt: Date;
   startDateTime: Date;
   endDateTime: Date;
-  price?: string;
-  isFree?: boolean;
+  price: string;
+  isFree: boolean;
   url?: string;
-  categoryId: { _id: string; name: string };
+  category: { _id: string; name: string };
   organizer: { _id: string; firstName: string; lastName: string };
 }
 
@@ -27,7 +27,7 @@ const EventSchema = new Schema({
   price: { type: String },
   isFree: { type: Boolean, default: false },
   url: { type: String },
-  categoryId: { type: Schema.Types.ObjectId, ref: "Category" },
+  category: { type: Schema.Types.ObjectId, ref: "Category" },
   organizer: { type: Schema.Types.ObjectId, ref: "User" },
 });
 

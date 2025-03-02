@@ -68,12 +68,18 @@ export async function POST(req: Request) {
 
     const newUser = await createUser(user);
 
-    if (newUser) {
-      await clerkClient.users.updateUser(id, {
-        publicMetadata: {
-          userId: newUser.id,
-        },
-      });
+    if (newUser && newUser._id != null) {
+      try {
+        await clerkClient.users.updateUserMetadata(newUser.clerkId, {
+          publicMetadata: {
+            userId: newUser._id as string,
+          },
+        });
+      } catch (error) {
+        throw new Error("Failed to insert user id to publicMetadata");
+      }
+    } else {
+      throw new Error("Failed to create the user");
     }
 
     return NextResponse.json({ message: "OK", user: newUser });

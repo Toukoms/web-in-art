@@ -1,8 +1,16 @@
 import { Button } from "@/components/ui/button";
+import Collection from "@/components/shared/Collection";
 import Image from "next/image";
 import Link from "next/link";
+import { getAllEvents } from "@/lib/actions/event.actions";
 
-export default function Home() {
+export default async function Home() {
+  const events = await getAllEvents({
+    query: "",
+    category: "",
+    limit: 6,
+    page: 1,
+  });
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -31,11 +39,21 @@ export default function Home() {
       </section>
 
       <section id="events" className="wrapper my-8 flex flex-col md:gap-12">
-        <h2 className="h2-bold">Trust by <br /> Thousands of Events</h2>
+        <h2 className="h2-bold">
+          Trust by <br /> Thousands of Events
+        </h2>
         <div className="w-full flex flex-col gap-5 md:flex-row ">
-          Search
-          CategoryFilter
+          Search CategoryFilter
         </div>
+        <Collection
+          data={events?.data}
+          emptyTitle={"No Upcoming Event"}
+          emptyStateSubtext={"Come Back Later"}
+          collectionType="All_Events"
+          limit={0}
+          page={""}
+          totalPages={events?.totalPages}
+        />
       </section>
     </>
   );
