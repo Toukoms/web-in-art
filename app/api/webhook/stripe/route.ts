@@ -1,11 +1,11 @@
-import stripe from "stripe";
-import { NextResponse } from "next/server";
 import { createOrder } from "@/lib/actions/order.actions";
+import { NextRequest, NextResponse } from "next/server";
+import stripe from "stripe";
 
-export async function POST(request: Request) {
-  const body = await request.text();
+export async function POST(req: NextRequest) {
+  const body = await req.text();
 
-  const sig = request.headers.get("stripe-signature") as string;
+  const sig = req.headers.get("stripe-signature") as string;
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   let event;
@@ -22,6 +22,10 @@ export async function POST(request: Request) {
   // CREATE
   if (eventType === "checkout.session.completed") {
     const { id, amount_total, metadata } = event.data.object;
+
+    if (!id || !amount_total || !metadata) {
+      return NextResponse.json({ message: "Missing data" }, { status: 404 });
+    }
 
     const order = {
       stripeId: id,

@@ -7,7 +7,15 @@ import { checkoutOrder } from "@/lib/actions/order.actions";
 
 loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
+const Checkout = ({
+  event,
+  userId,
+  email,
+}: {
+  event: IEvent;
+  userId: string;
+  email: string;
+}) => {
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
     const query = new URLSearchParams(window.location.search);
@@ -31,7 +39,7 @@ const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
       buyerId: userId,
     };
 
-    await checkoutOrder(order);
+    await checkoutOrder(order, email);
   };
 
   return (
