@@ -20,14 +20,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "../ui/input";
-import { createCategory, getAllCategories } from "@/lib/actions/category.actions";
+import {
+  createCategory,
+  getAllCategories,
+} from "@/lib/actions/category.actions";
 
-type DropdownProps = {
+type DropdownCategoryProps = {
   value: string;
   onChangeHandler: () => void;
 };
 
-const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
+const DropdownCategory = ({
+  value,
+  onChangeHandler,
+}: DropdownCategoryProps) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [newCategory, setNewCategory] = useState("");
 
@@ -37,16 +43,16 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
     }).then((category) => {
       setCategories([...categories, category]);
       setNewCategory("");
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     const getCategories = async () => {
       const fetchedCategories = await getAllCategories();
       fetchedCategories && setCategories(fetchedCategories);
-    }
+    };
     getCategories();
-  }, [])
+  }, []);
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
@@ -83,7 +89,11 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogAction onClick={() => startTransition(handleAddCategory)}>Add</AlertDialogAction>
+              <AlertDialogAction
+                onClick={() => startTransition(handleAddCategory)}
+              >
+                Add
+              </AlertDialogAction>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -93,4 +103,4 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
   );
 };
 
-export default Dropdown;
+export default DropdownCategory;

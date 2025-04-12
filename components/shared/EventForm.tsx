@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { eventFormSchema } from "@/lib/validator";
 import { z } from "zod";
 import { eventDefaultValues } from "@/constants";
-import Dropdown from "./Dropdown";
+import DropdownCategory from "./DropdownCategory";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "./FileUploader";
 import { useState } from "react";
@@ -128,7 +128,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormPros) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <Dropdown
+                  <DropdownCategory
                     onChangeHandler={field.onChange}
                     value={field.value}
                   />

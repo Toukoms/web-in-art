@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import Checkout from "./Checkout";
+import { Edit } from "lucide-react";
 
 const CheckoutButton = ({ event }: { event: IEvent }) => {
   const { user } = useUser();
@@ -15,7 +16,14 @@ const CheckoutButton = ({ event }: { event: IEvent }) => {
 
   return (
     <div className="flex items-center gap-3">
-      {hasEventFinished ? (
+      {userId === event.organizer._id ? (
+        <Button asChild className="button rounded-full" size="lg">
+          <Link href={`/events/${event._id}/update`}>
+            <Edit />
+            Modify
+          </Link>
+        </Button>
+      ) : hasEventFinished ? (
         <p className="p-2 text-red-400">
           Sorry, tickets are no longer available.
         </p>
